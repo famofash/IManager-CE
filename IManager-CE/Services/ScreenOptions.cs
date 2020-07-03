@@ -40,8 +40,9 @@ namespace IManager_CE.Services
                 switch (consoleKeyInfo.KeyChar)
                 {
                     case 'G':
-                        _smanager.AllSchedule.ForEach(item => Console.WriteLine($"Flight: {item.Flight},departure: {item.Depature},arrival: {item.Arrival},day: {item.Day}"));
-                        
+                        _smanager.AllSchedule.ForEach(item =>
+                            Console.WriteLine($"Flight: {item.Flight},departure: {item.Depature},arrival: {item.Arrival},day: {item.Day}"));
+
                         //display available options to continue
                         Console.WriteLine("\n\n1) Press Key L to add another flight schedule ");
                         Console.WriteLine("2) Press Key O to view main options");
@@ -55,10 +56,10 @@ namespace IManager_CE.Services
                         itinaries.ForEach(itinary =>
                         {
                             string str;
-                            if (!itinary.Flight.HasValue || itinary.OrderId == null)
-                                str = $"order: {itinary.OrderId}, flightNumber: not scheduled";
+                            if (!itinary.Flight.HasValue || itinary.OrderId == null) str = $"order: {itinary.OrderId}, flightNumber: not scheduled";
                             else
-                                str = $"order: {itinary.OrderId} flightNumber: {itinary.Flight},departure: {itinary.Depature}, arrival: {itinary.Arrival}, day: {itinary.Day} \n";
+                                str =
+                                    $"order: {itinary.OrderId} flightNumber: {itinary.Flight},departure: {itinary.Depature}, arrival: {itinary.Arrival}, day: {itinary.Day} \n";
 
                             Console.WriteLine(str);
                         });
@@ -67,28 +68,30 @@ namespace IManager_CE.Services
                         DisplayOptions();
                         break;
                     case 'L':
-                        
+
                         //display screen options
                         Console.WriteLine("\r\n ");
                         Console.Write("To continue, enter departure city, arrival city separated with '#' (hash) or ';' (semicolon)");
                         Console.WriteLine("in this format <departure_city>#<arrival_city>#<day>\n or <departure_city>#<arrival_city>#<day>");
 
                         Console.Write("\r\n Enter value: ");
-                        
-                        //read input from the console
-                        var str1 = Console.ReadLine();
 
-                        if (str1 != null)
+                        //read input from the console
+                        var userInput = Console.ReadLine();
+
+                        if (!string.IsNullOrEmpty(userInput))
                         {
                             //split input by either # or ;
-                            var strArray = str1.Split('#', ';');
-                            _smanager.Add(new FlightSchedule()
-                            {
-                                Depature = strArray[0],
-                                Arrival = strArray[1],
-                                Day = Convert.ToInt16(strArray[2]),
-                                Flight = _smanager.AllSchedule.Count + 1
-                            });
+                            var strArray = userInput.Split('#', ';');
+
+                            if (strArray.Length >= 3)
+                                _smanager.Add(new FlightSchedule()
+                                {
+                                    Depature = strArray[0],
+                                    Arrival = strArray[1],
+                                    Day = Convert.ToInt16(strArray[2]),
+                                    Flight = _smanager.AllSchedule.Count + 1
+                                });
                         }
 
                         Console.Write("\r\n Record saved successfully: ");
